@@ -1,23 +1,27 @@
 import os
 
+# https://www.geeksforgeeks.org/building-a-discord-bot-in-python/
+
 import discord
+from discord.ext.commands import Context
 from dotenv import load_dotenv
+from discord.ext import commands
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
-client = discord.Client(intents=discord.Intents.default())
+bot = commands.Bot(command_prefix='!', intents=discord.Intents.default())
 
-@client.event
-async def on_ready():
-    print(f'{client.user} has connected to Discord!')
+@bot.command(name="set_location", help="Set the location")
+async def set_location(ctx: Context):
+    print(ctx.current_argument)
+    print(ctx.current_parameter)
+    city = 'Budapest'
+    country = 'Hungary'
+    await ctx.send("Location for user " + ctx.author.name + " set to " + city + "," + country)
 
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
-    
-    response = "Hello world from python"
-    await message.channel.send(response)
+@bot.command(name="remove_location", help="Remove the location")
+async def remove_location(ctx: Context):
+    await ctx.send("Location removed for " + ctx.author.name)
 
-client.run(TOKEN)
+bot.run(TOKEN)
