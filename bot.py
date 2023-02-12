@@ -14,6 +14,7 @@ bot = commands.Bot(command_prefix='!', intents=discord.Intents.default())
 
 @bot.command(name="set_location", help="Set the location")
 async def set_location(ctx: Context):
+    command = ctx.message.clean_content
     print(ctx.current_argument)
     print(ctx.current_parameter)
     city = 'Budapest'
