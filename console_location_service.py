@@ -17,7 +17,7 @@ class ConsoleLocationService(LocationService):
             self.locations.pop(username, 0)
 
     def list_by_name(self, username: str):
-        return self.locations[username] if username in self.locations else set()
+        return self.locations[username] if username in self.locations else []
 
     def list_by_location(self, city: str, country: str):
         result = set()
@@ -29,7 +29,7 @@ class ConsoleLocationService(LocationService):
         return result
 
     def list_by_proximity(self, city: str, country: str, distance_in_km: int):
-        return set()
+        return self.list_by_location(city, country)
 
     def get_map_link(self):
         return 'http://fake.com/map'
