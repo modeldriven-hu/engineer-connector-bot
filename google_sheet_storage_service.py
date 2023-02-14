@@ -5,14 +5,16 @@ import pygsheets
 
 class GoogleSheetStorageService(StorageService):
 
-    def __init__(self) -> None:
-        pass
-    
+    def __init__(self, spreadsheet_id: str, credentials_file_path: str) -> None:        
+        self.gc = pygsheets.authorize(service_file=credentials_file_path)
+        self.sh = self.gc.open_by_key(spreadsheet_id)
+        self.worksheet = self.sh.sheet1
+
     def insert_record(self, values: List) -> None:
-        raise NotImplementedError
+        self.worksheet.append_table(values=values)
 
     def remove_record(self, row: int) -> None:
-        raise NotImplementedError
+        self.worksheet.delete_rows(row)
 
     def list_records(self) -> List:
-        raise NotImplementedError
+        return self.worksheet.get_all_records()

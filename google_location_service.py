@@ -1,13 +1,17 @@
 from location_service import LocationService
-import pygsheets
+from dotenv import load_dotenv
+from os import getenv
+from google_sheet_storage_service import GoogleSheetStorageService
 
 class GoogleLocationService(LocationService):
 
     def __init__(self) -> None:
         super().__init__()
+        load_dotenv()
+        self.storage = GoogleSheetStorageService(getenv('GOOGLE_SHEET_ID'), getenv('GOOGLE_KEY_FILE'))
 
     def store(self, username: str, city: str, country: str):
-        raise NotImplementedError
+        self.storage.insert_record([username, city, country])
 
     def remove(self, username: str):
         raise NotImplementedError
@@ -23,3 +27,6 @@ class GoogleLocationService(LocationService):
 
     def get_map_link(self):
         raise NotImplementedError
+
+service = GoogleLocationService()
+service.store('john.doe','Budapest','Hungary')
