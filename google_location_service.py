@@ -14,10 +14,21 @@ class GoogleLocationService(LocationService):
         self.storage.insert_record([username, city, country])
 
     def remove(self, username: str):
-        raise NotImplementedError
+
+        list = []
+
+        for index, r in enumerate(self.storage.list_records(), start = 2):
+            if r['username'] == username:
+                list.append(index)        
+                
+        # delete from the end of the list going backwards
+        for index in list[::-1]:                
+            self.storage.remove_record(index)
 
     def list_by_name(self, username: str): 
-        raise NotImplementedError
+        for r in self.storage.list_records():
+            if r['username'] == username:
+                return {'city':r['city'], 'country': r['country']}            
 
     def list_by_location(self, city: str, country: str):
         raise NotImplementedError
@@ -29,4 +40,7 @@ class GoogleLocationService(LocationService):
         raise NotImplementedError
 
 service = GoogleLocationService()
-service.store('john.doe','Budapest','Hungary')
+service.store('john.doe', 'Budapest', 'Hungary')
+service.store('jane.doe', 'Budapest', 'Hungary')
+service.store('john.doe', 'Budapest', 'Hungary')
+service.remove('john.doe')
