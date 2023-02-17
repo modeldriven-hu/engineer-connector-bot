@@ -20,9 +20,5 @@ class LocationService(Protocol):
         raise NotImplementedError
 
     @abstractmethod
-    def list_by_proximity(self, city: str, country: str, distance_in_km: int) -> Set[str]:
-        raise NotImplementedError
-
-    @abstractmethod
     def get_map_link(self) -> str:
         raise NotImplementedError

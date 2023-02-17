@@ -30,8 +30,5 @@ class ConsoleLocationService(LocationService):
 
         return result
 
-    def list_by_proximity(self, city: str, country: str, distance_in_km: int) -> Set[str]:
-        return self.list_by_location(city, country)
-
     def get_map_link(self) -> str:
         return 'http://fake.com/map'

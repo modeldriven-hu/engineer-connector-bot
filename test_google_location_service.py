@@ -1,9 +1,9 @@
 import unittest
-from console_location_service import ConsoleLocationService
+from google_location_service import GoogleLocationService
 
-class TestConsoleLocationService(unittest.TestCase):
+class TestGoogleLocationService(unittest.TestCase):
     def setUp(self):
-        self.service = ConsoleLocationService()
+        self.service = GoogleLocationService()
 
     def test_store(self):
         self.service.store('johndoe', 'New York', 'USA')
