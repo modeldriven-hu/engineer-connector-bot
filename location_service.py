@@ -1,10 +1,16 @@
 from abc import abstractmethod
+from dataclasses import dataclass
 from typing import Protocol, List, Set, Dict
+
+@dataclass
+class Location:
+    city: str
+    country: str
 
 class LocationService(Protocol):
 
     @abstractmethod
-    def store(self, username: str, city: str, country: str) -> None:
+    def store(self, username: str, location: Location) -> None:
         raise NotImplementedError
 
     @abstractmethod
@@ -12,11 +18,11 @@ class LocationService(Protocol):
         raise NotImplementedError
 
     @abstractmethod
-    def list_by_name(self, username: str) -> List[Dict[str, str]]: 
+    def list_by_name(self, username: str) -> List[Location]: 
         raise NotImplementedError
 
     @abstractmethod
-    def list_by_location(self, city: str, country: str) -> Set[str]:
+    def list_by_location(self, location: Location) -> Set[str]:
         raise NotImplementedError
 
     @abstractmethod

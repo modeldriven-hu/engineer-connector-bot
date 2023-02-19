@@ -1,16 +1,16 @@
-from location_service import LocationService
-from typing import List, Set, Dict
+from location_service import LocationService, Location
+from typing import List, Dict, Set
 
 class ConsoleLocationService(LocationService):
 
     def __init__(self) -> None:
-        self.locations: Dict[str, List[Dict[str, str]]] = {}
+        self.locations: Dict[str, List[Location]] = {}
 
-    def store(self, username: str, city: str, country: str) -> None:
+    def store(self, username: str, location: Location) -> None:
         if username not in self.locations:
             self.locations[username] = []
 
-        self.locations[username].append({'city': city, 'country': country})
+        self.locations[username].append(location)
 
     def remove(self, username: str) -> None:
         try:
@@ -18,14 +18,14 @@ class ConsoleLocationService(LocationService):
         except KeyError:
             pass
 
-    def list_by_name(self, username: str) -> List[Dict[str, str]]:
+    def list_by_name(self, username: str) -> List[Location]:
         return self.locations.get(username,[])
         
-    def list_by_location(self, city: str, country: str) -> Set[str]:
+    def list_by_location(self, location: Location) -> Set[str]:
         result = set()
         for key, values in self.locations.items():
-            for location in values:
-                if location['city'] == city and location['country'] == country:
+            for value in values:
+                if value == location:
                     result.add(key)
 
         return result

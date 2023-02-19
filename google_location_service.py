@@ -1,7 +1,8 @@
-from location_service import LocationService
+from location_service import LocationService, Location
 from dotenv import load_dotenv
 from os import getenv
 from google_sheet_storage_service import GoogleSheetStorageService
+from typing import List, Set, Dict
 
 class GoogleLocationService(LocationService):
 
@@ -13,7 +14,7 @@ class GoogleLocationService(LocationService):
         load_dotenv()
         self.storage = GoogleSheetStorageService(getenv('GOOGLE_SHEET_ID'), getenv('GOOGLE_KEY_FILE'))
 
-    def store(self, username: str, city: str, country: str):
+    def store(self, username: str, location: Location) -> None:
         """
         Store the location information for a user in the Google Sheet.
 
@@ -21,9 +22,9 @@ class GoogleLocationService(LocationService):
         :param city: The city where the user is located.
         :param country: The country where the user is located.
         """        
-        self.storage.insert_record([username, city, country])
+        self.storage.insert_record([username, location.city, location.country])
 
-    def remove(self, username: str):
+    def remove(self, username: str)-> None:
         """
         Remove the location information for a user from the Google Sheet.
 
@@ -39,33 +40,37 @@ class GoogleLocationService(LocationService):
         for index in records_to_remove[::-1]:                
             self.storage.remove_record(index)
 
-    def list_by_name(self, username: str):
+    def list_by_name(self, username: str) -> List[Location]:
         """
         Get the location information for a user by their username.
 
         :param username: The username of the user.
-        :return: A dictionary with the city and country where the user is located.
+        :return: A list with the city and country where the user is located.
         """        
+
+        locations = []
 
         for r in self.storage.list_records():
             if r['username'] == username:
-                return {'city':r['city'], 'country': r['country']}            
+                locations.append(Location(r['city'], r['country']))        
 
-    def list_by_location(self, city: str, country: str)-> set[str]:
+        return locations        
+
+    def list_by_location(self, city: str, country: str)-> Set[str]:
 
         locations = set()
 
         for r in self.storage.list_records():
             if r['city'].casefold() == city.casefold():
-                locations.append(r['username'])
+                locations.add(r['username'])
 
         return locations
 
-    def get_map_link(self):
-        raise NotImplementedError
+    def get_map_link(self) -> str:
+        return 'http://fake.com/map'
 
-service = GoogleLocationService()
-service.store('john.doe', 'Budapest', 'Hungary')
-service.store('jane.doe', 'Budapest', 'Hungary')
-service.store('john.doe', 'Budapest', 'Hungary')
-service.remove('john.doe')
+# service = GoogleLocationService()
+# service.store('john.doe', 'Budapest', 'Hungary')
+# service.store('jane.doe', 'Budapest', 'Hungary')
+# service.store('john.doe', 'Budapest', 'Hungary')
+# service.remove('john.doe')
